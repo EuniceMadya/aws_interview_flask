@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+  {% block content %}
+    <h1> Showing EC2 snapshot</h1>
+
+
+    <div class="row">
+      <div class="column">
+        <center>  <button onclick = "create_snapShot()"> create Snapshot</button></center>
+
+      <header class = "previous", id = "pending_EC2_info"> EC2 snapshot</header>
+      </div>
+
+      <div class="column">
+        <center>  <button onclick = "check_snapShot()"> check Snapshot</button></center>
+
+      <header class = , id = "success_EC2_info"> EC2 completion</header>
+      </div>
+
+
+
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.462.0.min.js"></script>
+    <!-- <script src="js/snapshot_ver2.js"></script> -->
+{% endblock content%}
