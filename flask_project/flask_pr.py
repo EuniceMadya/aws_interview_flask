@@ -1,5 +1,9 @@
 from flask import Flask, render_template, url_for
+import os
 app = Flask(__name__)
+
+
+
 
 posts = [
     {
@@ -28,9 +32,18 @@ def home():
 def about():
     return render_template('about.html')
 
-@app.route('/ec2_status')
+
+
+@app.route('/ec2_status_new')
 def ec2():
-    return render_template('ec2_status.html')
+    KEY_aws = os.environ["KEY_aws"]
+    secretAccessKey = os.environ["SECRETE_KEY"]
+    python_data = {
+    'KEY_aws': KEY_aws,
+    'secretAccessKey': secretAccessKey
+}
+
+    return render_template('ec2_status.html', python_data=python_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
