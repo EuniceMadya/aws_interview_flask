@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+  {% block content %}
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.462.0.min.js"></script>
+
+  <script>
+         <!--
+            function download(filename) {
+              // key = {{filename|tojson}};
+              var keys = {{ python_data|tojson }};
+              console.log("download")
+              console.log(filename)
+              AWS.config.update({region: 'ap-southeast-2'});
+              // AWS.config.credentials = {accessKeyId: keys.KEY_aws,
+              //   secretAccessKey: keys.secretAccessKey};
+
+              var s3 = new AWS.S3({accessKeyId: keys.KEY_aws,
+                secretAccessKey: keys.secretAccessKey, region: 'ap-southeast-2'});
+
+              var params = {
+                 Bucket: "ec2-snapshot-interview",
+                 Key: filename,
+                };
+            s3.getObject(
+            params,
+            function (error, data) {
+              if (error != null) {
+                alert("Failed to retrieve an object: " + error);
+              } else {
+                alert("Loaded " + data.ContentLength + " bytes");
+                // do something with data.Body
+              }
+            }
+          );
+        }
+
+         //-->
+      </script>
+<body>
+    <h1> Upload a file to S3</h1>
+
+    <center>
+      <form enctype=multipart/form-data action="{{ url_for('s3_info') }}" method="POST">
+          <input type="file" name="file">
+          <input type="submit" value="upload">
+      </form>
+      </center>
+
+
+      <p>Addtional information: {{information}}<p>
+      <h3 style="margin: 30pt"> Download:</h3>
+      {% for filen in filenames %}
+      <div style="margin: 30pt">
+
+
+          <h4 >{{ filen }}</h3>
+          <script>var fn = {{filen | tojson}}</script>
+          <input type="submit" value="download" onclick = "download(fn)" ></input>
+      </div>
+      {% endfor %}
+      {% if filename %}
+      {% endif %}
+  {% endblock content%}
