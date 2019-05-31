@@ -20,19 +20,18 @@ app.config['filenames'] = filenames
 
 @app.route('/')
 def hello():
-    return '<h1>Hello !<h1>'
+    return render_template('home.html', title='home')
 
 @app.route('/Home')
 def home():
-    return render_template('home.html', posts=posts, title='home')
+    return render_template('forloop.html', posts=posts, title='home')
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('home.html')
 
 @app.route('/ec2_status_new')
 def ec2():
-
     python_data = {
         'KEY_aws': KEY_aws,
         'secretAccessKey': secretAccessKey
@@ -44,19 +43,7 @@ def ec2():
 def download():
     print("\n\n\n\n\n", request.form)
     key = request.form['key']
-    #
 
-    # s3.download_file('BUCKET_NAME', 'OBJECT_NAME', 'FILE_NAME')
-
-    #
-    # file_obj = my_bucket.Object(key).get()
-    #
-    # return Response(
-    #     file_obj['Body'].read(),
-    #     mimetype='text/plain',
-    #     headers={"Content-Disposition": "attachment;filename={}".format(key)}
-    # )
-    # print("here we go")
     upload_multi_s3.download(key)
     # filename = "s"
     return render_template("progress.html", filename=key);
@@ -64,19 +51,22 @@ def download():
 @app.route('/s3_upload')
 def s3_upload():
 
-    return render_template('S3_upload.html', title='s3 upload', filenames=filenames, filename="", information="",python_data="")
+    return render_template('s3_upload.html', title='s3 upload', filenames=filenames, filename="", information="",python_data="")
 
 @app.route('/s3_info', methods=['GET', 'POST'])
 def s3_info():
+    filename=""
+    information="please upload a file"
+    python_data = {
+        'KEY_aws': KEY_aws,
+        'secretAccessKey': secretAccessKey
+    }
     if request.method == 'POST':
-        python_data = {
-            'KEY_aws': KEY_aws,
-            'secretAccessKey': secretAccessKey
-        }
+
         if 'file' not in request.files:
             # flash('No file part')
             # return redirect(request.url)
-            return render_template('S3_upload.html', title='s3 upload',filenames=filenames, filename="", information="please upload a file",python_data=python_data)
+            return render_template('s3_upload.html', title='s3 upload',filenames=filenames, filename=filename, information=information,python_data=python_data)
 
         file = request.files['file']
         print(file)
@@ -97,11 +87,11 @@ def s3_info():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         information = upload_multi_s3.upload_to_s3(filename, app.config['UPLOAD_FOLDER']+"/"+filename)
 
-    return render_template('S3_upload.html', title='s3 upload',filenames=filenames, filename=filename, information=information,python_data=python_data)
+    return render_template('s3_upload.html', title='s3 upload',filenames=filenames, filename=filename, information=information,python_data=python_data)
 
 
 
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+     app.run(host='0.0.0.0', debug = True)
