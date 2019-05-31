@@ -48,3 +48,7 @@ def complete(mpu_id, parts, filename):
         UploadId=mpu_id,
         MultipartUpload={"Parts": parts})
     return result
+
+
+def download(filename):
+    s3.download_file(bucket_name, filename, "/Users/madya/Documents/GitHub/aws_interview_flask/flask_project/download_simulation/"+filename)

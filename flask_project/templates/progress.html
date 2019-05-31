@@ -2,9 +2,15 @@
   {% block content %}
 <body>
     <center>
-      <h3>Upload detail of {{filename}}</h3>
+      <h3>Successfully downloaded {{filename}}</h3>
 
 
-      <h4> Download address:</h4>
+      <h4> Please check in your folder for detail!</h4>
+      <form class="download-form" action="{{ url_for('s3_info') }}" method="POST">
+
+        <input type="hidden" name="key" >
+
+        <input type="submit" value="Click here to go back"  ></input>
+        </form>
     </center>
   {% endblock content%}

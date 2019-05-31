@@ -41,10 +41,25 @@ def ec2():
 
 
 @app.route('/download', methods=['GET', 'POST'])
-def upload():
-    print("here we go")
-    upload_multi_s3.download(filename)
-    return render_template("progress.html", filename=filename);
+def download():
+    print("\n\n\n\n\n", request.form)
+    key = request.form['key']
+    #
+
+    # s3.download_file('BUCKET_NAME', 'OBJECT_NAME', 'FILE_NAME')
+
+    #
+    # file_obj = my_bucket.Object(key).get()
+    #
+    # return Response(
+    #     file_obj['Body'].read(),
+    #     mimetype='text/plain',
+    #     headers={"Content-Disposition": "attachment;filename={}".format(key)}
+    # )
+    # print("here we go")
+    upload_multi_s3.download(key)
+    # filename = "s"
+    return render_template("progress.html", filename=key);
 
 @app.route('/s3_upload')
 def s3_upload():
@@ -54,9 +69,15 @@ def s3_upload():
 @app.route('/s3_info', methods=['GET', 'POST'])
 def s3_info():
     if request.method == 'POST':
+        python_data = {
+            'KEY_aws': KEY_aws,
+            'secretAccessKey': secretAccessKey
+        }
         if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
+            # flash('No file part')
+            # return redirect(request.url)
+            return render_template('S3_upload.html', title='s3 upload',filenames=filenames, filename="", information="please upload a file",python_data=python_data)
+
         file = request.files['file']
         print(file)
         print(request.files)
@@ -75,10 +96,7 @@ def s3_info():
         print(path)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         information = upload_multi_s3.upload_to_s3(filename, app.config['UPLOAD_FOLDER']+"/"+filename)
-        python_data = {
-            'KEY_aws': KEY_aws,
-            'secretAccessKey': secretAccessKey
-        }
+
     return render_template('S3_upload.html', title='s3 upload',filenames=filenames, filename=filename, information=information,python_data=python_data)
 
 
